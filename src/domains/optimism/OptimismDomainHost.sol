@@ -76,7 +76,7 @@ contract OptimismDomainHost is OptimisticDomainHost {
         deposit(to, amount, glDeposit);
     }
     function deposit(address to, uint256 amount, uint32 gasLimit) public {
-        (address _to, uint256 _amount) = _deposit(to, amount);
+        (uint256 _to, uint256 _amount) = _deposit(uint256(uint160(to)), amount);
         l1messenger.sendMessage(
             guest,
             abi.encodeWithSelector(DomainGuestLike.deposit.selector, _to, _amount),
@@ -124,7 +124,7 @@ contract OptimismDomainHost is OptimisticDomainHost {
         exit(usr, wad, glExit);
     }
     function exit(address usr, uint256 wad, uint32 gasLimit) public {
-        (address _usr, uint256 _wad) = _exit(usr, wad);
+        (uint256 _usr, uint256 _wad) = _exit(uint256(uint160(usr)), wad);
         l1messenger.sendMessage(
             guest,
             abi.encodeWithSelector(DomainGuestLike.exit.selector, _usr, _wad),

@@ -97,7 +97,7 @@ contract ArbitrumDomainHost is OptimisticDomainHost {
         uint256 maxGas,
         uint256 gasPriceBid
     ) public payable {
-        (address _to, uint256 _amount) = _deposit(to, amount);
+        (uint256 _to, uint256 _amount) = _deposit(uint256(uint160(to)), amount);
         inbox.createRetryableTicket{value: msg.value}(
             guest,
             0, // we always assume that l2CallValue = 0
@@ -212,13 +212,13 @@ contract ArbitrumDomainHost is OptimisticDomainHost {
     }
 
     function exit(
-        address usr,
+        uint256 usr,
         uint256 wad,
         uint256 maxSubmissionCost,
         uint256 maxGas,
         uint256 gasPriceBid
     ) public payable {
-        (address _usr, uint256 _wad) = _exit(usr, wad);
+        (uint256 _usr, uint256 _wad) = _exit(usr, wad);
         inbox.createRetryableTicket{value: msg.value}(
             guest,
             0, // we always assume that l2CallValue = 0
@@ -231,7 +231,7 @@ contract ArbitrumDomainHost is OptimisticDomainHost {
         );
     }
     function exit(
-        address usr,
+        uint256 usr,
         uint256 wad,
         uint256 maxSubmissionCost,
         uint256 gasPriceBid
