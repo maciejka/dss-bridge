@@ -106,9 +106,9 @@ abstract contract DomainHost {
     event Rectify(uint256 wad);
     event Cage();
     event Tell(uint256 value);
-    event Exit(address indexed usr, uint256 wad);
+    event Exit(uint256 indexed usr, uint256 wad);
     event UndoExit(address indexed originalSender, uint256 wad);
-    event Deposit(address indexed to, uint256 amount);
+    event Deposit(uint256 indexed to, uint256 amount);
     event UndoDeposit(address indexed originalSender, uint256 amount);
     event Withdraw(address indexed to, uint256 amount);
     event RegisterMint(TeleportGUID teleport);
@@ -179,7 +179,7 @@ abstract contract DomainHost {
     /// @notice Deposit local DAI to mint remote canonical DAI
     /// @param to The address to send the DAI to on the remote domain
     /// @param amount The amount of DAI to deposit [WAD]
-    function _deposit(address to, uint256 amount) internal returns (address _to, uint256 _amount) {
+    function _deposit(uint256 to, uint256 amount) internal returns (uint256 _to, uint256 _amount) {
         require(dai.transferFrom(msg.sender, escrow, amount), "DomainHost/transfer-failed");
 
         _to = to;
@@ -330,7 +330,7 @@ abstract contract DomainHost {
     /// @notice Allow DAI holders to exit during global settlement
     /// @param usr The address to send the claim token to
     /// @param wad The amount of gems to exit [WAD]
-    function _exit(address usr, uint256 wad) internal returns (address _usr, uint256 _wad) {
+    function _exit(uint256 usr, uint256 wad) internal returns (uint256 _usr, uint256 _wad) {
         require(vat.live() == 0, "DomainHost/vat-live");
         vat.slip(ilk, msg.sender, -_int256(wad));
 

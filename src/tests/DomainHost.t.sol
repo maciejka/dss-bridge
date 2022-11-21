@@ -28,7 +28,7 @@ contract EmptyDomainHost is OptimisticDomainHost {
     }
 
     function deposit(address to, uint256 amount) external {
-        (address _to, uint256 _amount) = _deposit(to, amount);
+        (uint256 _to, uint256 _amount) = _deposit(uint256(uint160(to)), amount);
         lastPayload = abi.encodeWithSelector(DomainGuestLike.deposit.selector, _to, _amount);
     }
     function undoDeposit(address originalSender, uint256 amount) external {
@@ -46,8 +46,8 @@ contract EmptyDomainHost is OptimisticDomainHost {
         (uint256 _rid) = _cage();
         lastPayload = abi.encodeWithSelector(DomainGuestLike.cage.selector, _rid);
     }
-    function exit(address usr, uint256 wad) external {
-        (address _usr, uint256 _wad) = _exit(usr, wad);
+    function exit(uint256 usr, uint256 wad) external {
+        (uint256 _usr, uint256 _wad) = _exit(usr, wad);
         lastPayload = abi.encodeWithSelector(DomainGuestLike.exit.selector, _usr, _wad);
     }
     function undoExit(address originalSender, uint256 wad) external {
@@ -475,7 +475,7 @@ contract DomainHostTest is DSSTest {
 
         vm.expectEmit(true, true, true, true);
         emit Exit(address(123), 50 ether);
-        host.exit(address(123), 50 ether);
+        host.exit(uint256(uint160(address(123))), 50 ether);
 
         assertEq(host.lastPayload(), abi.encodeWithSelector(DomainGuestLike.exit.selector, address(123), 50 ether));
     }
@@ -491,7 +491,7 @@ contract DomainHostTest is DSSTest {
         vat.slip(ILK, address(this), 50 ether);
 
         // User attempts to exit
-        host.exit(address(123), 50 ether);
+        host.exit(uint256(uint160(address(123))), 50 ether);
 
         assertEq(vat.gem(ILK, address(this)), 0);
 
